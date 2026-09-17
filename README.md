@@ -1,3 +1,12 @@
+# Nightdrive — Neon Coast Run
+
+A retro synthwave pseudo-3D racer built with Phaser 4 + Vite + TypeScript,
+inspired by the 80s Testarossa/night-drive aesthetic and classic OutRun-style
+arcade racers. See [`DESIGN.md`](DESIGN.md) for the full game design
+document (references, controls, technical approach, copyright notes).
+
+---
+
 # Phaser Vite TypeScript Template
 
 This is a Phaser project template that uses Vite for bundling. It supports hot-reloading for quick development workflow, includes TypeScript support and scripts to generate production-ready builds.
@@ -11,8 +20,6 @@ This template has been updated for:
 - [Phaser 4](https://github.com/phaserjs/phaser)
 - [Vite 6.3.1](https://github.com/vitejs/vite)
 - [TypeScript 5.7.2](https://github.com/microsoft/TypeScript)
-
-![screenshot](screenshot.png)
 
 ## Requirements
 
