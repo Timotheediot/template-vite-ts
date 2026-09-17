@@ -3,17 +3,16 @@ import { Road } from '../road/Road';
 import { ROAD, SCREEN_WIDTH, SCREEN_HEIGHT } from '../constants';
 
 export interface TrafficCar {
-    z: number;      // position along the track (world units)
+    z: number;      // fixed position along the track (world units) — parked, not moving
     offset: number; // lane position, -1 (left edge) .. 1 (right edge)
-    speed: number;  // world units / second
     key: string;
 }
 
 const CAR_KEYS = ['car-traffic-a', 'car-traffic-b', 'car-traffic-c'];
 
-// Manages AI traffic cars: spawning along the endless track, advancing them
-// each frame, projecting them through the same pseudo-3D camera as the road,
-// and exposing simple lane/z data for the player collision check in Game.ts.
+// Manages parked traffic cars: fixed obstacles placed along the endless
+// track that the player must steer around. They don't move — only the
+// player's position changes — so `update()` is a no-op kept for API parity.
 export class Traffic {
     cars: TrafficCar[] = [];
     private road: Road;
@@ -31,7 +30,6 @@ export class Traffic {
         return {
             z,
             offset: lanes[Math.floor(Math.random() * lanes.length)],
-            speed: 3000 + Math.random() * 3500,
             key: CAR_KEYS[Math.floor(Math.random() * CAR_KEYS.length)]
         };
     }
@@ -45,12 +43,8 @@ export class Traffic {
         }
     }
 
-    update(dt: number) {
-        const trackLength = this.road.trackLength;
-        for (const car of this.cars) {
-            car.z = (car.z + car.speed * dt) % trackLength;
-            if (car.z < 0) car.z += trackLength;
-        }
+    update(_dt: number) {
+        // Parked obstacles don't move.
     }
 
     // Draws all traffic cars currently within the draw distance ahead of

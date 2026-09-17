@@ -22,7 +22,7 @@ UX language to replicate:
   in flat pixel-art bands (sky/sea/mountains/road).
 - **Player car**: seen from behind/three-quarter, leans into curves, kicks up
   dust/tire smoke, red convertible silhouette (our Ferrari Testarossa nod).
-- **Traffic**: slower cars in lanes that must be dodged; collisions spin the
+- **Obstacles**: parked cars in lanes that must be dodged; collisions spin the
   car out and cost time.
 - **"EXTENDED PLAY"/checkpoint** banner when reaching a distance milestone.
 
@@ -31,18 +31,19 @@ UX language to replicate:
 **Title:** Nightdrive — Neon Coast Run
 **Genre:** Endless pseudo-3D arcade racer
 **Pitch:** Drive a neon-red Testarossa down an endless coastal night highway,
-dodge traffic, chain curves, and outrun the clock as the night gets faster and
-more dangerous — synthwave dream, arcade rules.
+dodge parked cars, chain curves, and outrun the clock as the night gets
+faster and more dangerous — synthwave dream, arcade rules.
 
 ## 3. Core loop
 
 1. Player starts with a TIME bank (60s).
 2. Distance driven increases SCORE (and a speed bonus multiplier).
 3. Every distance milestone = new **STAGE**, adds bonus TIME, raises speed
-   cap/traffic density (difficulty ramps like OutRun's stage progression, but
-   infinite instead of a fixed 5 stages).
+   cap/obstacle density (difficulty ramps like OutRun's stage progression,
+   but infinite instead of a fixed 5 stages).
 4. Steering off-road onto the grass rumble strongly slows the car.
-5. Colliding with traffic spins the car out, costs time and a chunk of speed.
+5. Colliding with a parked car spins the car out, costs time and a chunk of
+   speed.
 6. Game ends when TIME hits 0. Final SCORE is compared to the localStorage
    high score.
 
@@ -86,7 +87,7 @@ src/game/
   constants.ts             # Tunable gameplay/road constants
   assets/TextureFactory.ts # Procedural pixel-art texture generation
   road/Road.ts             # Pseudo-3D road model + segment projection
-  objects/Traffic.ts       # Traffic car spawning/update/collision
+  objects/Traffic.ts       # Parked-car obstacle placement/collision
   scenes/Boot.ts
   scenes/Preloader.ts
   scenes/MainMenu.ts

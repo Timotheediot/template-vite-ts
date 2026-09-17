@@ -12,31 +12,34 @@ const px = (n: number) => n; // small helper for readability, 1 unit = 1px
 function carTexture(scene: Scene, key: string, bodyColor: number, roofColor: number, width: number, height: number) {
     const g = scene.add.graphics();
 
-    // Tires / shadow
-    g.fillStyle(0x000000, 0.35);
-    g.fillEllipse(width / 2, height - px(2), width * 0.8, px(6));
+    // Simple, clear 2D car silhouette viewed from behind: flat rounded body,
+    // a clean windshield block, visible wheels, and separated tail lights.
+    // Kept intentionally simple/readable at small screen scale rather than
+    // detailed, per design feedback.
 
-    // Body (wedge-shaped, 80s sports car silhouette, viewed from behind/3-quarter)
+    // Ground shadow
+    g.fillStyle(0x000000, 0.3);
+    g.fillEllipse(width / 2, height - px(3), width * 0.75, px(8));
+
+    // Wheels (peeking out from behind the body, bottom corners)
+    g.fillStyle(0x111111, 1);
+    g.fillRoundedRect(px(2), height - px(16), px(10), px(14), px(3));
+    g.fillRoundedRect(width - px(12), height - px(16), px(10), px(14), px(3));
+
+    // Body
     g.fillStyle(bodyColor, 1);
-    g.fillRoundedRect(px(4), px(6), width - px(8), height - px(14), px(4));
+    g.fillRoundedRect(width * 0.08, height * 0.18, width * 0.84, height * 0.62, px(6));
 
-    // Roof / cabin
+    // Windshield / cabin
     g.fillStyle(roofColor, 1);
-    g.fillRoundedRect(width * 0.28, px(0), width * 0.44, px(10), px(3));
+    g.fillRoundedRect(width * 0.24, px(0), width * 0.52, height * 0.34, px(4));
+    g.fillStyle(0x9fdcff, 0.95);
+    g.fillRoundedRect(width * 0.3, height * 0.06, width * 0.4, height * 0.16, px(2));
 
-    // Windshield glint
-    g.fillStyle(0x9fdcff, 0.9);
-    g.fillRect(width * 0.3, px(2), width * 0.4, px(3));
-
-    // Tail lights (neon red bar, very Testarossa)
+    // Tail lights (two clean separated bars, not a single strip)
     g.fillStyle(0xff2d55, 1);
-    g.fillRect(px(4), height - px(12), width - px(8), px(3));
-
-    // Rear vents (Testarossa side strakes nod)
-    g.fillStyle(0x000000, 0.25);
-    for (let i = 0; i < 4; i++) {
-        g.fillRect(px(6) + i * (width - px(12)) / 4, height - px(9), px(2), px(6));
-    }
+    g.fillRoundedRect(width * 0.1, height * 0.58, width * 0.22, height * 0.14, px(2));
+    g.fillRoundedRect(width * 0.68, height * 0.58, width * 0.22, height * 0.14, px(2));
 
     g.generateTexture(key, width, height);
     g.destroy();
