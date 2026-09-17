@@ -1,4 +1,8 @@
 import { Scene } from 'phaser';
+import { buildAllTextures } from '../assets/TextureFactory';
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../constants';
+
+const FONT_FAMILY = '"Press Start 2P", monospace';
 
 export class Preloader extends Scene
 {
@@ -7,40 +11,45 @@ export class Preloader extends Scene
         super('Preloader');
     }
 
-    init ()
-    {
-        //  We loaded this image in our Boot Scene, so we can display it here
-        this.add.image(512, 384, 'background');
-
-        //  A simple progress bar. This is the outline of the bar.
-        this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
-
-        //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(512-230, 384, 4, 28, 0xffffff);
-
-        //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
-        this.load.on('progress', (progress: number) => {
-
-            //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-            bar.width = 4 + (460 * progress);
-
-        });
-    }
-
-    preload ()
-    {
-        //  Load the assets for the game - Replace with your own assets
-        this.load.setPath('assets');
-
-        this.load.image('logo', 'logo.png');
-    }
-
     create ()
     {
-        //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-        //  For example, you can define global animations here, so we can use them in other scenes.
+        const cx = SCREEN_WIDTH / 2;
+        const cy = SCREEN_HEIGHT / 2;
 
-        //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('MainMenu');
+        this.cameras.main.setBackgroundColor('#0a0016');
+
+        this.add.text(cx, cy - 60, 'NIGHTDRIVE', {
+            fontFamily: FONT_FAMILY, fontSize: 40, color: '#ff2d95'
+        }).setOrigin(0.5);
+
+        this.add.rectangle(cx, cy + 20, 420, 24).setStrokeStyle(2, 0x38f2ff);
+        const bar = this.add.rectangle(cx - 206, cy + 20, 4, 18, 0x38f2ff).setOrigin(0, 0.5);
+
+        const label = this.add.text(cx, cy + 60, 'LOADING...', {
+            fontFamily: FONT_FAMILY, fontSize: 14, color: '#ffffff'
+        }).setOrigin(0.5);
+
+        // Generate all pixel-art textures, then wait for the retro webfont
+        // to finish loading (it's requested via <link> in index.html) before
+        // handing off to the menu, so text doesn't flash in a fallback font.
+        buildAllTextures(this);
+
+        const goNext = () => {
+            label.setText('READY');
+            this.time.delayedCall(150, () => this.scene.start('MainMenu'));
+        };
+
+        const fonts = (document as any).fonts;
+        if (fonts && fonts.load) {
+            Promise.race([
+                fonts.load('16px "Press Start 2P"').then(() => fonts.ready),
+                new Promise((resolve) => setTimeout(resolve, 1500))
+            ]).then(goNext).catch(goNext);
+        }
+        else {
+            this.time.delayedCall(300, goNext);
+        }
+
+        bar.width = 420;
     }
 }
